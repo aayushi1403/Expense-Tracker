@@ -7,3 +7,5 @@ let cross=document.querySelector(".delete-btn")
 let newTransactionDetail=document.querySelector("#text")
 let newAmount=document.querySelector("#amountSpent")
 let addTransaction=document.querySelector("#btn")
+
+let transactionList=document.querySelector(".list")
