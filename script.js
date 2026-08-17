@@ -18,6 +18,5 @@ form.addEventListener('submit',(e)=>{
   e.preventDefault();
   let des=newTransactionDetail.value;
   let userAmount=newAmount.value;
-  console.log(des)
-  console.log(userAmount)
+  
 })
