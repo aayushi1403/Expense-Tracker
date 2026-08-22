@@ -1,4 +1,4 @@
-let balance=document.querySelector("#balance")
+let userbalance=document.querySelector("#balance")
 let income=document.querySelector("#money-plus")
 let expense=document.querySelector("#money-minus")
 let userList=document.querySelector("#list")
@@ -14,6 +14,7 @@ let TransactionObj=
 }
 let TransactionArray=[]
 let index=0;
+
 form.addEventListener('submit',(e)=>{
   e.preventDefault();
   let des=newTransactionDetail.value;
@@ -24,13 +25,18 @@ form.addEventListener('submit',(e)=>{
     amount:Number(userAmount)
   }
   index++;
-    
     TransactionArray=[...TransactionArray,transaction]
     displayTransaction();
+
+    updateValues();
+    saveTransactions();
+    form.reset();
 })
 
 function displayTransaction() {
+   userList.innerHTML=""
   TransactionArray.forEach((element) => {
+   
     userList.insertAdjacentHTML(
       "beforeend",
       `<li>
@@ -46,6 +52,37 @@ userList.addEventListener('click',(e)=>{deleting(e.target.closest('.deleteButton
 function deleting(id,item){
   const temp=TransactionArray.filter((element)=>element.id!=Number(id))
   TransactionArray=temp;
-
+  saveTransactions();
   item.remove();
+  updateValues();
+  
 }
+
+function updateValues(){
+  const sum=TransactionArray.reduce((acc,transaction)=>{return acc+transaction.amount},0)
+  userbalance.textContent=sum;
+  const i=TransactionArray.filter((transaction)=>{return transaction.amount>0}).reduce((acc,transaction)=>{return acc+transaction.amount},0);
+  income.textContent=i;
+  const e=TransactionArray.filter((transaction)=>{return transaction.amount<0}).reduce((acc,transaction)=>{return acc+transaction.amount},0);
+  expense.textContent=Math.abs(e);
+}
+
+function saveTransactions() {
+  localStorage.setItem(
+    "transactions",
+    JSON.stringify(TransactionArray)
+  );
+}
+function loadTransactions() {
+  const savedTransactions = localStorage.getItem("transactions");
+  if (savedTransactions) {
+    TransactionArray = JSON.parse(savedTransactions);
+    index=TransactionArray.length;
+  } else {
+    TransactionArray = [];
+  }
+  
+  displayTransaction(TransactionArray);
+  updateValues();
+}
+loadTransactions();
